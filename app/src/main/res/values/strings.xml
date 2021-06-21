@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">MyTwitterClone</string>
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+    <string name="back4app_app_id">bFZvxKIJ78aPvVnYvaQmZFKBH32Hs6rQ9E7i8GY8</string>
+    <string name="back4app_client_key">qwgrxOqwIlWcDUvERcIVI2oY3Sjp5eBFYpuDGCBQ</string>
+    <string name="please_enter_an_email">Please enter an email…</string>
+    <string name="please_enter_a_password">Please enter a password…</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="please_enter_an_username">Please enter an username…</string>
+    <string name="send_a_tweet">Send a tweet..</string>
+    <string name="view_other_user_s_tweets">View other user&apos;s tweets</string>
+    <string name="logout">Logout</string>
+</resources>

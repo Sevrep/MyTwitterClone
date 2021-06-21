@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/logout_item"
+        android:orderInCategory="101"
+        android:title="@string/logout"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/sendTweetItem"
+        android:icon="@drawable/send"
+        android:orderInCategory="100"
+        android:title="@string/send_a_tweet"
+        app:showAsAction="always" />
+
+</menu>
