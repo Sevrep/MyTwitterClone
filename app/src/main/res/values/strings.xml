@@ -9,6 +9,6 @@
     <string name="sign_up">Sign Up</string>
     <string name="please_enter_an_username">Please enter an username…</string>
     <string name="send_a_tweet">Send a tweet..</string>
-    <string name="view_other_user_s_tweets">View other user&apos;s tweets</string>
+    <string name="view_other_user_s_tweets">View other users tweets</string>
     <string name="logout">Logout</string>
 </resources>

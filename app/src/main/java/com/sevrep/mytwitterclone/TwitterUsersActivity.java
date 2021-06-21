@@ -1,5 +1,6 @@
 package com.sevrep.mytwitterclone;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -28,6 +29,8 @@ public class TwitterUsersActivity extends AppCompatActivity implements AdapterVi
     private ArrayList<String> tUsers;
     private ArrayAdapter<String> adapter;
 
+    private String followedUser = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,12 +53,16 @@ public class TwitterUsersActivity extends AppCompatActivity implements AdapterVi
                     tUsers.add(twitterUser.getUsername());
                 }
                 listView.setAdapter(adapter);
-                for (String twitterUser : tUsers) {
-                    if (ParseUser.getCurrentUser().getList("fanOf") != null) {
+                if (ParseUser.getCurrentUser().getList("fanOf") != null) {
+                    for (String twitterUser : tUsers) {
+                        followedUser = String.format("%s, %s", followedUser, twitterUser);
                         if (Objects.requireNonNull(ParseUser.getCurrentUser().getList("fanOf")).contains(twitterUser)) {
                             listView.setItemChecked(tUsers.indexOf(twitterUser), true);
                         }
                     }
+                    FancyToast.makeText(this, "You're following " + followedUser, Toast.LENGTH_SHORT, FancyToast.INFO, true).show();
+                } else {
+                    FancyToast.makeText(this, "You're not following anyone.", Toast.LENGTH_SHORT, FancyToast.INFO, true).show();
                 }
 
             }
@@ -72,28 +79,21 @@ public class TwitterUsersActivity extends AppCompatActivity implements AdapterVi
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.logout_item) {
-            ParseUser.getCurrentUser();
-            ParseUser.logOutInBackground(e -> {
-                Intent intent = new Intent(TwitterUsersActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            });
+            logout();
         } else if (itemId == R.id.sendTweetItem) {
-            Intent intent = new Intent(TwitterUsersActivity.this, SendTweetActivity.class);
-            startActivity(intent);
+            goToSendTweet();
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         CheckedTextView checkedTextView = (CheckedTextView) view;
         if (checkedTextView.isChecked()) {
-            FancyToast.makeText(TwitterUsersActivity.this, tUsers.get(position) + " is now followed!", Toast.LENGTH_SHORT, FancyToast.INFO, true).show();
+            FancyToast.makeText(this, tUsers.get(position) + " is now followed!", Toast.LENGTH_SHORT, FancyToast.INFO, true).show();
             ParseUser.getCurrentUser().add("fanOf", tUsers.get(position));
         } else {
-            FancyToast.makeText(TwitterUsersActivity.this, tUsers.get(position) + " is now unfollowed!", Toast.LENGTH_SHORT, FancyToast.INFO, true).show();
+            FancyToast.makeText(this, tUsers.get(position) + " is now unfollowed!", Toast.LENGTH_SHORT, FancyToast.INFO, true).show();
             Objects.requireNonNull(ParseUser.getCurrentUser().getList("fanOf")).remove(tUsers.get(position));
             List<Object> currentUserFanOfList = ParseUser.getCurrentUser().getList("fanOf");
             ParseUser.getCurrentUser().remove("fanOf");
@@ -102,9 +102,38 @@ public class TwitterUsersActivity extends AppCompatActivity implements AdapterVi
         }
         ParseUser.getCurrentUser().saveInBackground(e -> {
             if (e == null) {
-                FancyToast.makeText(TwitterUsersActivity.this, "Saved", Toast.LENGTH_SHORT, FancyToast.SUCCESS, true).show();
+                FancyToast.makeText(this, "Saved", Toast.LENGTH_SHORT, FancyToast.SUCCESS, true).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        logout();
+    }
+
+    private void goToSendTweet() {
+        Intent intent = new Intent(TwitterUsersActivity.this, SendTweetActivity.class);
+        startActivity(intent);
+    }
+
+    private void logout() {
+        new AlertDialog.Builder(this)
+                .setTitle("Logging out?")
+                .setMessage("Are you sure you want to logout?")
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, (arg0, arg1) -> {
+
+                    ParseUser.getCurrentUser();
+                    ParseUser.logOutInBackground(e -> {
+                        Intent intent = new Intent(TwitterUsersActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    });
+
+                })
+                .create()
+                .show();
     }
 
 }

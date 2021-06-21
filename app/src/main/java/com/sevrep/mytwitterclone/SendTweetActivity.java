@@ -1,6 +1,7 @@
 package com.sevrep.mytwitterclone;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -55,6 +56,17 @@ public class SendTweetActivity extends AppCompatActivity implements View.OnClick
         } else if (id == R.id.btnViewTweets) {
             viewTweets();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        goToTwitterUsers();
+    }
+
+    private void goToTwitterUsers() {
+        Intent intent = new Intent(this, TwitterUsersActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void sendTweet() {
