@@ -3,6 +3,7 @@ package com.sevrep.mytwitterclone;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,10 +21,11 @@ import com.shashank.sony.fancytoastlib.FancyToast;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SendTweetActivity extends AppCompatActivity implements View.OnClickListener {
+public class SendTweetActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener {
 
     private EditText edtTweet;
     private ListView viewTweetsListView;
+    private Button btnSendTweet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +33,11 @@ public class SendTweetActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_send_tweet);
 
         edtTweet = findViewById(R.id.edtSendTweet);
+        edtTweet.setOnKeyListener(this);
 
         viewTweetsListView = findViewById(R.id.viewTweetsListView);
 
-        Button btnSendTweet = findViewById(R.id.btnSendTweet);
+        btnSendTweet = findViewById(R.id.btnSendTweet);
         btnSendTweet.setOnClickListener(this);
 
         Button btnViewTweets = findViewById(R.id.btnViewTweets);
@@ -69,6 +72,17 @@ public class SendTweetActivity extends AppCompatActivity implements View.OnClick
         finish();
     }
 
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        if (v == edtTweet) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                onClick(btnSendTweet);
+            }
+            return false;
+        }
+        return true;
+    }
+
     public void sendTweet() {
         ParseObject parseObject = new ParseObject("MyTweet");
         parseObject.put("tweet", edtTweet.getText().toString());
@@ -86,6 +100,7 @@ public class SendTweetActivity extends AppCompatActivity implements View.OnClick
             }
             progressDialog.dismiss();
         });
+        viewTweets();
     }
 
     private void viewTweets() {
@@ -109,5 +124,4 @@ public class SendTweetActivity extends AppCompatActivity implements View.OnClick
             e.printStackTrace();
         }
     }
-
 }
